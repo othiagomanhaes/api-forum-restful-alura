@@ -6,11 +6,11 @@ import br.comalura.forum.dto.TopicoView
 import br.comalura.forum.exception.NotFoundException
 import br.comalura.forum.mapper.TopicoFormMapper
 import br.comalura.forum.mapper.TopicoViewMapper
-import br.comalura.forum.model.Topico
 import br.comalura.forum.repository.TopicoRepository
+import org.springframework.data.domain.Page
+import org.springframework.data.domain.Pageable
 import org.springframework.stereotype.Service
 import java.util.stream.Collectors
-import kotlin.collections.ArrayList
 
 @Service
 class TopicoService(
@@ -21,10 +21,19 @@ class TopicoService(
 
     ) {
 
-    fun listar(nomeCurso: String?): List<TopicoView> {
-        return repository.findAll().stream().map {
+    fun listar(
+        nomeCurso: String?,
+        paginacao: Pageable
+    ): Page<TopicoView> {
+        val topicos = if (nomeCurso == null ) {
+            repository.findAll(paginacao)
+        } else {
+            repository.findByCursoNome(nomeCurso, paginacao)
+        }
+
+        return topicos.map {
             t -> topicoViewMapper.map(t)
-        }.collect(Collectors.toList())
+        }
     }
 
     fun buscarPorId(id: Long): TopicoView {
