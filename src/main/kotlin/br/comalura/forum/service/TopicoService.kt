@@ -2,6 +2,7 @@ package br.comalura.forum.service
 
 import br.comalura.forum.dto.AtualizacaoTopicoForm
 import br.comalura.forum.dto.NovoTopicoForm
+import br.comalura.forum.dto.TopicoPorCategoriaDto
 import br.comalura.forum.dto.TopicoView
 import br.comalura.forum.exception.NotFoundException
 import br.comalura.forum.mapper.TopicoFormMapper
@@ -61,6 +62,10 @@ class TopicoService(
 
     fun deletar(id: Long) {
         repository.deleteById(id)
+    }
+
+    fun relatorio(): List<TopicoPorCategoriaDto> {
+        return repository.relatorio()
     }
 
 }
